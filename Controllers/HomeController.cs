@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Portfolio.API.Controllers
 {
+    [Route("api")]
     public class HomeController : Controller
     {
         // GET: /<controller>/
