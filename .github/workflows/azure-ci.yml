@@ -27,15 +27,16 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      run: | 
-        pushd .
-        dotnet build --configuration Release --no-restore --output ./output
-        popd
+      run: dotnet build ./src --configuration Release
+    - name: Publish 
+      run: |
+        dotnet publish ./src -c Release -o dist
         
     - name: Deploy to Azure
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{secrets.AZURE_APP_NAME}}
+        package: './dist'
 
     - name: Logout of Azure
       run: |
