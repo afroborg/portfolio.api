@@ -23,7 +23,7 @@ namespace Portfolio.API.Controllers
 
         [HttpGet]
         [ActionName("GetAll")]
-        public async Task<IActionResult> GetAll() => Ok(await _dbService.GetAllAsync<Project>("SELECT * FROM c"));
+        public async Task<IActionResult> GetAll() => Ok((await _dbService.GetAllAsync<Project>("SELECT * FROM c")).Select(p => p.ToList()));
 
         [HttpGet("{id}")]
         [ActionName("GetOne")]
@@ -33,19 +33,16 @@ namespace Portfolio.API.Controllers
         public async Task<IActionResult> GetDetails([FromRoute] string id)
         {
             var project = await _dbService.GetAsync<Project>(id);
-            if (project.Github != null && !project.IsPrivate)
+            var detailedProject = project.ToDetailed();
+
+            if (detailedProject.Github != null)
             {
-                var detailedProject = project.ToDetailed();
                 var githubService = new GithubService(project.Github.User, project.Github.Repository);
                 detailedProject.GithubContent.Commits = await githubService.GetCommits();
                 detailedProject.GithubContent.Workflows = await githubService.GetWorkflows();
-                
-                return Ok(detailedProject);
+
             }
-            else
-            {
-                return Ok(project);
-            }
+            return Ok(detailedProject);
 
         }
 

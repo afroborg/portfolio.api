@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Portfolio.API.Models.Dtos;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Portfolio.API.Models
 {
@@ -13,6 +10,10 @@ namespace Portfolio.API.Models
         public string Id { get; set; }
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+        [JsonProperty(PropertyName = "demoUrl")]
+        public string DemoUrl { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
         [JsonProperty(PropertyName = "tags")]
         public IList<string> Tags { get; set; }
         [JsonProperty(PropertyName = "languages")]
@@ -28,15 +29,27 @@ namespace Portfolio.API.Models
 
         public DetailedProject ToDetailed() => new DetailedProject
         {
-            Name = Name,
             Id = Id,
+            Name = Name,
+            Description = Description,
             Tags = Tags,
             Languages = Languages,
             IsPrivate = IsPrivate,
             HasAuthentication = HasAuthentication,
             IsFullStack = IsFullStack,
-            Github = Github,
-            GithubContent = new DetailedGithubInfo()
+            Github = IsPrivate ? null : Github,
+            DemoUrl = IsPrivate ? null : DemoUrl,
+            GithubContent = IsPrivate ? null : new DetailedGithubInfo()
+        };
+
+        public ProjectForList ToList() => new ProjectForList
+        {
+            Id = Id,
+            Name = Name,
+            Languages = Languages,
+            Github = IsPrivate ? null : Github,
+            DemoUrl = IsPrivate ? null : DemoUrl,
+            IsPrivate = IsPrivate
         };
     }
 
