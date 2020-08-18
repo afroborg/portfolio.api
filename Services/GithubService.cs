@@ -66,7 +66,7 @@ namespace Portfolio.API.Services
 
         public async Task<List<GithubWorkflow>> GetWorkflows()
         {
-            var endpoint = $"{GITHUB_API_URL}repos/{_user}/{_repository}/workflows";
+            var endpoint = $"{GITHUB_API_URL}repos/{_user}/{_repository}/actions/workflows";
             var response = await _client.GetAsync(endpoint);
 
             if (response.IsSuccessStatusCode)
